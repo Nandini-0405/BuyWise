@@ -1,0 +1,38 @@
+name: BuyWise Daily Amazon Refresh
+
+on:
+  schedule:
+    # 2:00 AM IST = 8:30 PM UTC (previous day)
+    - cron: '30 20 * * *'
+  workflow_dispatch:   # also allow manual trigger from GitHub UI
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run BuyWise pipeline
+        env:
+          BUYWISE_EMAIL_SENDER:   ${{ secrets.BUYWISE_EMAIL_SENDER }}
+          BUYWISE_EMAIL_PASSWORD: ${{ secrets.BUYWISE_EMAIL_PASSWORD }}
+        run: python src/etl/pipeline.py
+
+      - name: Commit updated database
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "BuyWise Bot"
+          git add database/buywise.db reports/pipeline.log
+          git diff --staged --quiet || git commit -m "chore: daily price refresh $(date -u '+%Y-%m-%d')"
+          git push

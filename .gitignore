@@ -1,0 +1,17 @@
+venv/
+__pycache__/
+*.pyc
+# Keep main database tracked for deployment
+database/*.db
+!database/buywise.db
+
+# Exclude large CSV data files (>100MB exceeds GitHub limit)
+data/
+
+.ipynb_checkpoints/
+
+.env
+
+.vscode/
+
+*.log
