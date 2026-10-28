@@ -4,15 +4,25 @@ Save products to track with a personal target price.
 Stored persistently in the buywise.db database.
 """
 
+import sys
+from pathlib import Path
+
+# Ensure dashboard and root directories are in sys.path
+_P = Path(__file__).resolve()
+for _dir in [_P.parents[1], _P.parents[2], _P.parents[3]]:
+    if str(_dir) not in sys.path:
+        sys.path.insert(0, str(_dir))
+
 import sqlite3
 import streamlit as st
 import pandas as pd
 from datetime import date
-from utils import apply_custom_css, load_data
 
-import sys
-from pathlib import Path
-sys.path.insert(0, str(Path(__file__).resolve().parent.parent.parent))
+try:
+    from utils import apply_custom_css, load_data
+except (ImportError, AttributeError):
+    from src.dashboard.utils import apply_custom_css, load_data
+
 from config import DB_PATH
 
 st.set_page_config(page_title="Wishlist | BuyWise", page_icon="❤️", layout="wide")

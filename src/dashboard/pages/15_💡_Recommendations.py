@@ -1,7 +1,20 @@
+import sys
+from pathlib import Path
+
+# Ensure dashboard and root directories are in sys.path
+_P = Path(__file__).resolve()
+for _dir in [_P.parents[1], _P.parents[2], _P.parents[3]]:
+    if str(_dir) not in sys.path:
+        sys.path.insert(0, str(_dir))
+
 import streamlit as st
 import pandas as pd
 import numpy as np
-from utils import apply_custom_css, load_data
+
+try:
+    from utils import apply_custom_css, load_data
+except (ImportError, AttributeError):
+    from src.dashboard.utils import apply_custom_css, load_data
 
 st.set_page_config(page_title="Recommendations | BuyWise", page_icon="💡", layout="wide")
 apply_custom_css()

@@ -1,7 +1,20 @@
+import sys
+from pathlib import Path
+
+# Ensure dashboard and root directories are in sys.path
+_P = Path(__file__).resolve()
+for _dir in [_P.parent, _P.parent.parent, _P.parent.parent.parent]:
+    if str(_dir) not in sys.path:
+        sys.path.insert(0, str(_dir))
+
 import streamlit as st
 import plotly.express as px
 import pandas as pd
-from utils import apply_custom_css, load_data
+
+try:
+    from utils import apply_custom_css, load_data
+except (ImportError, AttributeError):
+    from src.dashboard.utils import apply_custom_css, load_data
 
 # --------------------------------------------------
 # Page Config
