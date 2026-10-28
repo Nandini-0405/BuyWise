@@ -170,10 +170,67 @@ def apply_custom_css():
             }
         }
 
-        /* Hide Streamlit chrome */
-        #MainMenu, footer, header { visibility: hidden; }
+        /* Hide Streamlit default chrome menus, but KEEP header and sidebar toggle controls visible */
+        #MainMenu { visibility: hidden; }
+        footer { visibility: hidden; }
         .stDeployButton { display: none; }
         div[data-testid="stDecoration"] { display: none; }
+        div[data-testid="stStatusWidget"] { display: none; }
+
+        /* Keep header non-intrusive yet functional */
+        header[data-testid="stHeader"] {
+            background: transparent !important;
+            z-index: 99999 !important;
+        }
+
+        /* CRITICAL: Ensure sidebar toggle button is ALWAYS visible & easy to tap on phones / mobile */
+        [data-testid="stSidebarCollapsedControl"],
+        button[data-testid="baseButton-headerNoPadding"],
+        [data-testid="stSidebarCollapseButton"] {
+            display: flex !important;
+            visibility: visible !important;
+            opacity: 1 !important;
+            z-index: 100000 !important;
+        }
+
+        /* Modern styled floating badge for mobile sidebar button */
+        [data-testid="stSidebarCollapsedControl"] button,
+        button[data-testid="baseButton-headerNoPadding"] {
+            background: #ffffff !important;
+            color: #6366f1 !important;
+            border: 1.5px solid #e0e7ff !important;
+            border-radius: 10px !important;
+            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.18) !important;
+            padding: 4px 8px !important;
+            transition: all 0.2s ease !important;
+        }
+        [data-testid="stSidebarCollapsedControl"] button:hover {
+            background: #f5f3ff !important;
+            border-color: #6366f1 !important;
+            transform: scale(1.05);
+        }
+
+        /* Mobile layout refinements */
+        @media (max-width: 768px) {
+            .block-container {
+                padding-top: 3.5rem !important;
+                padding-left: 1rem !important;
+                padding-right: 1rem !important;
+            }
+            .bw-header {
+                padding: 1.2rem;
+                margin-bottom: 1.5rem;
+            }
+            .bw-header h1 {
+                font-size: 1.6rem;
+            }
+            .bw-header p {
+                font-size: 0.95rem;
+            }
+            .metric-value {
+                font-size: 1.5rem;
+            }
+        }
     </style>
     """, unsafe_allow_html=True)
 
